@@ -8,11 +8,14 @@ export default class Experience {
         this.canvas=canvas
         //Setup
         this.sizes=new Sizes()
-      
-    
-        console.log(this.sizes.width)
-        console.log(this.sizes.height)
-        console.log(this.sizes.pixelRatio)
+        //Resize Event
+        this.sizes.on('resize',()=>{
+            this.resize()
+        })
+
+    }
+    resize(){
+        
     }
 
 }
