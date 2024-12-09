@@ -1,4 +1,6 @@
 import Sizes from "./Utils/Sizes"
+import Time from "./Utils/Time"
+import * as THREE from 'three'
 
 export default class Experience {
     constructor(canvas){
@@ -8,14 +10,21 @@ export default class Experience {
         this.canvas=canvas
         //Setup
         this.sizes=new Sizes()
+        this.time= new Time()
+        this.scene=new THREE.Scene()
+
+
         //Resize Event
         this.sizes.on('resize',()=>{
             this.resize()
         })
-
+        // Time tick event
+        this.time.on('tick', () =>
+            {
+                this.update()
+            })
+        }
+        update(){}
+        resize(){}
+    
     }
-    resize(){
-        
-    }
-
-}
