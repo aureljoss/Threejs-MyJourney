@@ -38,7 +38,11 @@ geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms,1))
 const material = new THREE.RawShaderMaterial({
     vertexShader: testVertexShader,
     fragmentShader:testFragmentShader,
-    side: THREE.DoubleSide
+    side: THREE.DoubleSide, 
+    uniforms:{
+        uFrequency: {value: new THREE.Vector2(10,5)}, 
+        uTime:{value:0}
+    }
 })
 
 // Mesh
@@ -80,6 +84,10 @@ scene.add(camera)
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
+/**lil-gui */
+gui.add(material.uniforms.uFrequency.value, 'x').min(0).max(20).step(0.01).name('frequencyX')
+gui.add(material.uniforms.uFrequency.value, 'y').min(0).max(20).step(0.01).name('frequencyY')
+
 /**
  * Renderer
  */
@@ -100,6 +108,9 @@ const tick = () =>
 
     // Update controls
     controls.update()
+
+    //Update material
+    material.uniforms.uTime.value=elapsedTime
 
     // Render
     renderer.render(scene, camera)
