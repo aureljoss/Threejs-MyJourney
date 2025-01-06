@@ -5,6 +5,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import firefliesVertexShader from './Shaders/fireflies/vertex.glsl'
 import firefliesFragmentShader from './Shaders/fireflies/fragment.glsl'
+import portalVertexShader from './shaders/portal/vertex.glsl'
+import portalFragmentShader from './shaders/portal/fragment.glsl'
 
 
 /**
@@ -52,7 +54,14 @@ const bakedMaterial=new THREE.MeshBasicMaterial({map: bakedTexture,side:THREE.Do
 const poleLightMaterial= new THREE.MeshBasicMaterial({color:0xffffe5})
 
 //Portal Light Material
-const portalLightMaterial = new THREE.MeshBasicMaterial({color:0xffffff, side:THREE.DoubleSide})
+const portalLightMaterial = new THREE.ShaderMaterial({
+    uniforms:
+    {
+        uTime: {value:0}
+    },
+    vertexShader: portalVertexShader,
+    fragmentShader: portalFragmentShader
+})
 
 /**
  * Model
@@ -89,9 +98,9 @@ const positionArray= new Float32Array(firefliesCount*3)
 const scaleArray = new Float32Array(firefliesCount)
 
 for (let i=0; i<firefliesCount; i++){
-    positionArray[i*3+0]=(Math.random() -0.5) *4
-    positionArray[i*3+1]=Math.random()*4
-    positionArray[i*3+2]=(Math.random() - 0.5) *4
+    positionArray[i * 3 + 0] = (Math.random() - 0.5) * 4
+    positionArray[i * 3 + 1] = Math.random() * 1.5
+    positionArray[i * 3 + 2] = (Math.random() - 0.5) * 4
 
     scaleArray[i]=Math.random()
 
@@ -188,6 +197,7 @@ const tick = () =>
     const elapsedTime = clock.getElapsedTime()
 
     //Update Materials
+    portalLightMaterial.uniforms.uTime.value = elapsedTime
     firefliesMaterial.uniforms.uTime.value = elapsedTime
 
     // Update controls
