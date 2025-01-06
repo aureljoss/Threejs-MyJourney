@@ -3,11 +3,15 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
+import firefliesVertexShader from './Shaders/fireflies/vertex.glsl'
+import firefliesFragmentShader from './Shaders/fireflies/fragment.glsl'
+
 
 /**
  * Base
  */
 // Debug
+const debugObject={}
 const gui = new GUI({
     width: 400
 })
@@ -42,10 +46,13 @@ bakedTexture.colorSpace = THREE.SRGBColorSpace
  * Material
  */
 // Baked Material
-const backedMaterial=new THREE.MeshBasicMaterial({map: bakedTexture})
+const bakedMaterial=new THREE.MeshBasicMaterial({map: bakedTexture,side:THREE.DoubleSide})
 
 //Pole Light material
-const poleLightMaterial= new THREE.MeshBasicMaterial({color:0xffffe5, side:THREE.DoubleSide})
+const poleLightMaterial= new THREE.MeshBasicMaterial({color:0xffffe5})
+
+//Portal Light Material
+const portalLightMaterial = new THREE.MeshBasicMaterial({color:0xffffff, side:THREE.DoubleSide})
 
 /**
  * Model
@@ -53,9 +60,7 @@ const poleLightMaterial= new THREE.MeshBasicMaterial({color:0xffffe5, side:THREE
 
 gltfLoader.load('portal.glb',
     (gltf)=>{
-        gltf.scene.traverse((child)=>{
-            child.material=backedMaterial
-        })
+        const bakedMesh= gltf.scene.children.find(child => child.name === 'baked')
         const poleLightAMesh= gltf.scene.children.find((child)=>{
             return child.name === 'poleLightA'
         })
@@ -66,13 +71,37 @@ gltfLoader.load('portal.glb',
             return child.name === 'portalLight'
         })
 
+        bakedMesh.material=bakedMaterial
         poleLightAMesh.material=poleLightMaterial
         poleLightBMesh.material=poleLightMaterial
-        portalLightMesh.material=poleLightMaterial
-
+        portalLightMesh.material=portalLightMaterial
         scene.add(gltf.scene)
     }
 )
+
+/**
+ * Fireflies
+ */
+// Geometry
+const firefliesGeometry= new THREE.BufferGeometry()
+const firefliesCount=30
+const positionArray= new Float32Array(firefliesCount*3)
+for (let i=0; i<firefliesCount; i++){
+    positionArray[i*3+0]=(Math.random() -0.5) *4
+    positionArray[i*3+1]=Math.random()*4
+    positionArray[i*3+2]=(Math.random() - 0.5) *4
+
+}
+
+firefliesGeometry.setAttribute('position', new THREE.BufferAttribute(positionArray, 3))
+
+//Material
+const firefliesMaterial = new THREE.PointsMaterial({size:0.1, sizeAttenuation: true})
+
+//Points
+const fireflies= new THREE.Points(firefliesGeometry, firefliesMaterial)
+scene.add(fireflies)
+
 
 /**
  * Sizes
@@ -120,6 +149,12 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+debugObject.clearColor='#110e0e'
+renderer.setClearColor(debugObject.clearColor)
+gui.addColor(debugObject, 'clearColor').onChange(()=>{
+    renderer.setClearColor(debugObject.clearColor)
+})
 
 /**
  * Animate
