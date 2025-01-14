@@ -1,4 +1,4 @@
-#define PI 3.1415926535897932384626433832795;
+#define PI 3.1415926535897932384626433832795
 
 varying vec2 vUv;
 
@@ -147,7 +147,65 @@ void main()
     // //33
     // float strength= step(0.25,distance(vUv, vec2(0.5)));
     // gl_FragColor = vec4(strength, strength, strength, 1.0);
-    //34
-    float strength= step(0.25,distance(vUv, vec2(0.5)));
+    // //34
+    // float strength= abs(distance(vUv, vec2(0.5))-0.25);
+    // gl_FragColor = vec4(strength, strength, strength, 1.0);
+    // //35
+    // float strength= step(0.01,abs(distance(vUv, vec2(0.5))-0.25));
+    // gl_FragColor = vec4(strength, strength, strength, 1.0);
+    // //36
+    // float strength= 1.0-step(0.01,abs(distance(vUv, vec2(0.5))-0.25));
+    // gl_FragColor = vec4(strength, strength, strength, 1.0);
+    // //37
+    // vec2 wavedUv= vec2(
+    //     vUv.x,
+    //     vUv.y+sin(vUv.x*30.0)*0.1
+    // );
+    // float strength= 1.0-step(0.01,abs(distance(wavedUv, vec2(0.5))-0.25));
+    // gl_FragColor = vec4(strength, strength, strength, 1.0);
+    // //38
+    // vec2 wavedUv= vec2(
+    //     vUv.x+sin(vUv.y*30.0)*0.1,
+    //     vUv.y+sin(vUv.x*30.0)*0.1
+    // );
+    // float strength= 1.0-step(0.01,abs(distance(wavedUv, vec2(0.5))-0.25));
+    // gl_FragColor = vec4(strength, strength, strength, 1.0);
+    // //39
+    // vec2 wavedUv= vec2(
+    //     vUv.x+sin(vUv.y*60.0)*0.1,
+    //     vUv.y+sin(vUv.x*60.0)*0.1
+    // );
+    // float strength= 1.0-step(0.01,abs(distance(wavedUv, vec2(0.5))-0.25));
+    // gl_FragColor = vec4(strength, strength, strength, 1.0);
+    // //40
+    // float angle=atan(vUv.x, vUv.y);
+    // float strength=angle;
+    // gl_FragColor = vec4(strength, strength, strength, 1.0);
+    // //41
+    // float angle=atan(vUv.x-0.5, vUv.y-0.5);
+    // float strength=angle;
+    // gl_FragColor = vec4(strength, strength, strength, 1.0);
+    //42
+    // float angle = atan(vUv.x - 0.5, vUv.y - 0.5) / (PI * 2.0) + 0.5;
+    // angle /= PI * 2.0;
+    // angle += 0.5;
+    // float strength = angle;
+    // gl_FragColor = vec4(strength, strength, strength, 1.0);
+    // //43
+    // float angle=atan(vUv.x-0.5, vUv.y-0.5);
+    // angle /= PI *2.0;
+    // angle += 0.5;
+    // angle*=20.0;
+    // angle=mod(angle, 1.0);
+    // float strength = angle;
+    // gl_FragColor = vec4(strength, strength, strength, 1.0);
+    // //44
+    // float angle=atan(vUv.x-0.5, vUv.y-0.5);
+    // angle /= PI *2.0;
+    // angle += 0.5;
+    // float strength = sin(angle*200.0);
+    // gl_FragColor = vec4(strength, strength, strength, 1.0);
+    //46
+    float strength=vUv.x;
     gl_FragColor = vec4(strength, strength, strength, 1.0);
 }
