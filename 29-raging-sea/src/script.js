@@ -10,6 +10,7 @@ import waterFragmentShader from './shaders/water/fragment.glsl'
  */
 // Debug
 const gui = new GUI({ width: 340 })
+const debugObject ={}
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -23,14 +24,27 @@ const scene = new THREE.Scene()
 // Geometry
 const waterGeometry = new THREE.PlaneGeometry(2, 2, 128, 128)
 
+//Color
+debugObject.depthColor ='#5873e9'
+debugObject.surfaceColor="#ff513d"
+
 // Material
 const waterMaterial = new THREE.ShaderMaterial({
     side: THREE.DoubleSide,
     vertexShader: waterVertexShader, 
     fragmentShader: waterFragmentShader, 
     uniforms:{
-        uBigWavesElevation:{value:0.2}, 
-        uBigWavesFrequency:{value: new THREE.Vector2(4, 1.5)}
+        uTime: {value:0},
+
+        uBigWavesElevation:{value:0.3}, 
+        uBigWavesFrequency:{value: new THREE.Vector2(5, 3)},
+        uBigWavesSpeed:{value:0.9},
+
+        uDepthColor:{value: new THREE.Color(debugObject.depthColor )},
+        uSurfaceColor:{value: new THREE.Color(debugObject.surfaceColor)},
+        uColorOffset:{value: 0.25},
+        uColorMultiplier: {value:2}
+
     }
 })
 
@@ -38,6 +52,22 @@ const waterMaterial = new THREE.ShaderMaterial({
 gui.add(waterMaterial.uniforms.uBigWavesElevation, 'value').min(0).max(1).step(0.001).name('uBigWavesElevation')
 gui.add(waterMaterial.uniforms.uBigWavesFrequency.value, 'x').min(0).max(10).step(0.001).name('uBigWavesFrequencyX')
 gui.add(waterMaterial.uniforms.uBigWavesFrequency.value, 'y').min(0).max(10).step(0.001).name('uBigWavesFrequencyY')
+gui.add(waterMaterial.uniforms.uBigWavesSpeed, 'value').min(0).max(4).step(0.001).name('uBigWavesSpeed')
+gui
+    .addColor(debugObject, 'depthColor')
+    .name('depthColor')
+    .onChange(()=>{
+        waterMaterial.uniforms.uDepthColor.value.set(debugObject.depthColor)
+    })
+
+gui
+    .addColor(debugObject, 'surfaceColor')
+    .name('surfaceColor')
+    .onChange(()=>{
+        waterMaterial.uniforms.uSurfaceColor.value.set(debugObject.surfaceColor)
+    })
+gui.add(waterMaterial.uniforms.uColorOffset, 'value').min(0).max(1).step(0.001).name('uColorOffset')
+gui.add(waterMaterial.uniforms.uColorMultiplier, 'value').min(0).max(10).step(0.001).name('uColorMultiplier')
 
 
 // Mesh
@@ -97,6 +127,9 @@ const clock = new THREE.Clock()
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
+
+    //Update UTime uniform
+    waterMaterial.uniforms.uTime.value=elapsedTime
 
     // Update controls
     controls.update()
