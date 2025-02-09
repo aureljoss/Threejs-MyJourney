@@ -23,7 +23,7 @@ const scene = new THREE.Scene()
  * Water
  */
 // Geometry
-const waterGeometry = new THREE.PlaneGeometry(2, 2, 512, 512)
+const waterGeometry = new THREE.PlaneGeometry(3, 3, 512, 512)
 
 //Color
 debugObject.depthColor ='#186691'
@@ -115,7 +115,7 @@ window.addEventListener('resize', () =>
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.set(1, 1, 1)
+camera.position.set(1, 0.5, 0)
 scene.add(camera)
 
 // Controls
