@@ -10,6 +10,7 @@ import waterFragmentShader from './shaders/water/fragment.glsl'
  */
 // Debug
 const gui = new GUI({ width: 340 })
+gui.close()
 const debugObject ={}
 
 // Canvas
